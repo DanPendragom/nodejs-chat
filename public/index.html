@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hello Socket.IO</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+        </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <form autocomplete="off" id="chat">
+        <section class="messages">
+
+        </section>
+        <div class="input">
+            <input id="msg" placeholder="Digite sua mensagem...">
+            <button type="submit">ENVIAR</button>
+        </div>
+    </form>
+    <script type="text/javascript">
+        
+        var socket = io('http://localhost:3000');
+        function renderMsg(message){
+            $('.messages').append("<div class='msg'><p>"+ message.message+"</p></div>");
+        }
+        socket.on("msgReceive", function(message){
+            renderMsg(message);    
+        });
+
+        $("#chat").submit(function(event){
+            event.preventDefault();
+
+            var msg = $("#msg").val();
+
+            if(msg.length){
+                
+                var msgObj = {
+                    message: msg,
+                }
+
+                renderMsg(msgObj);
+                socket.emit('send',msgObj);
+            };
+        });
+
+    </script>
+</body>
+
+</html>
